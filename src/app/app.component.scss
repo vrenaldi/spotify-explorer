@@ -1,0 +1,15 @@
+mat-toolbar {
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    padding: 0 .5rem;
+}
+
+.app-name { margin-left: 1rem; }
+
+mat-sidenav-content {
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+
+.active-link { background: rgba(255, 255, 255, .04); }

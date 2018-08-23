@@ -8,10 +8,14 @@ import { User } from '../models/user.model';
 })
 export class DataService {
   fragments: SpotifyFragments;
+
+  toolbarHeight: BehaviorSubject<number>;
   user: BehaviorSubject<User>;
 
   constructor() {
     this.fragments = { accessToken: "", state: "" };
+
+    this.toolbarHeight = new BehaviorSubject(56);
     this.user = new BehaviorSubject(new User("", ""));
   }
 }
