@@ -1,0 +1,12 @@
+.mat-tab-nav-bar {
+    position: fixed;
+    z-index: 2;
+    width: 100vw;
+    background-color: #212121;
+}
+
+.mat-tab-link {
+    flex: 1 1 0;
+
+    &.mat-tab-label-active { opacity: 1; }
+}

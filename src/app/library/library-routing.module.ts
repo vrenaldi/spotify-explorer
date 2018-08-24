@@ -1,7 +1,19 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [];
+import { LibraryComponent } from './library.component';
+
+const routes: Routes = [
+  {
+    path: "", component: LibraryComponent, children: [
+      // { path: "playlists", component: LibraryPlaylistsComponent },
+      // { path: "tracks", component: LibraryTracksComponent },
+      // { path: "albums", component: LibraryAlbumsComponent },
+      // { path: "artists", component: LibraryArtistsComponent },
+      // { path: "", redirectTo: "playlists", pathMatch: "full" }
+    ]
+  }
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

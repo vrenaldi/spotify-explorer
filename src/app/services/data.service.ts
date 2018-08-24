@@ -7,12 +7,16 @@ import { User } from '../models/user.model';
   providedIn: 'root'
 })
 export class DataService {
+  readonly tabsHeight: number;
+
   fragments: SpotifyFragments;
 
   toolbarHeight: BehaviorSubject<number>;
   user: BehaviorSubject<User>;
 
   constructor() {
+    this.tabsHeight = 49;
+
     this.fragments = { accessToken: "", state: "" };
 
     this.toolbarHeight = new BehaviorSubject(56);
