@@ -158,6 +158,29 @@ export class SpotifyService {
   }
   // ========================================
 
+
+  // ========================================
+  // Artists
+  // ========================================
+  getCurrUserFollowedArtists(currBatch: Batch) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.CursorBatch], currBatch)
+    };
+    return this.http.get(`${this.baseEndpoint}me/following?type=artist`, options).pipe(
+      map((results: any) => {
+        let artists: Artist[] = [];
+
+        results.artists.items.forEach(item => {
+          artists.push(new Artist(item.id, item.name, this.extractImage(item.images)));
+        });
+
+        return [artists, results.artists.total];
+      })
+    );
+  }
+  // ========================================
+
   generateHeaders() {
     let headers = { "Authorization": `Bearer ${this.dataService.fragments.accessToken}` };
     return headers;
@@ -170,6 +193,10 @@ export class SpotifyService {
       if (paramType == ParamType.Batch) {
         params.limit = values.limit.toString();
         params.offset = values.offset.toString();
+      }
+      if (paramType == ParamType.CursorBatch) {
+        params.limit = values.limit.toString();
+        if (values.lastId.toString().length > 0) params.after = values.lastId.toString();
       }
       if (paramType == ParamType.Ids) {
         params.ids = "";
@@ -188,5 +215,6 @@ export class SpotifyService {
 
 enum ParamType {
   Batch,
+  CursorBatch,
   Ids
 }

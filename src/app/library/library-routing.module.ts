@@ -5,6 +5,7 @@ import { LibraryComponent } from './library.component';
 import { LibraryPlaylistsComponent } from './library-playlists/library-playlists.component';
 import { LibraryTracksComponent } from './library-tracks/library-tracks.component';
 import { LibraryAlbumsComponent } from './library-albums/library-albums.component';
+import { LibraryArtistsComponent } from './library-artists/library-artists.component';
 
 const routes: Routes = [
   {
@@ -12,7 +13,7 @@ const routes: Routes = [
       { path: "playlists", component: LibraryPlaylistsComponent },
       { path: "tracks", component: LibraryTracksComponent },
       { path: "albums", component: LibraryAlbumsComponent },
-      // { path: "artists", component: LibraryArtistsComponent },
+      { path: "artists", component: LibraryArtistsComponent },
       { path: "", redirectTo: "playlists", pathMatch: "full" }
     ]
   }

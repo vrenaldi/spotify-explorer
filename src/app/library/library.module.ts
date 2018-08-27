@@ -10,6 +10,7 @@ import { LibraryComponent } from './library.component';
 import { LibraryPlaylistsComponent } from './library-playlists/library-playlists.component';
 import { LibraryTracksComponent } from './library-tracks/library-tracks.component';
 import { LibraryAlbumsComponent } from './library-albums/library-albums.component';
+import { LibraryArtistsComponent } from './library-artists/library-artists.component';
 
 @NgModule({
   imports: [
@@ -23,7 +24,8 @@ import { LibraryAlbumsComponent } from './library-albums/library-albums.componen
     LibraryComponent,
     LibraryPlaylistsComponent,
     LibraryTracksComponent,
-    LibraryAlbumsComponent
+    LibraryAlbumsComponent,
+    LibraryArtistsComponent
   ]
 })
 export class LibraryModule { }
