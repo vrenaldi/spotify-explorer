@@ -1,0 +1,20 @@
+.container { padding: .5rem; }
+
+mat-list-item { cursor: pointer; }
+
+img {
+    width: 56px !important;
+    height: 56px !important;
+    object-fit: cover !important;
+
+    &.not-profile {
+        border-radius: 0 !important;
+    }
+}
+
+mat-icon {
+    width: 32px !important;
+    height: 32px !important;
+    padding: 12px !important;
+    font-size: 32px !important;
+}

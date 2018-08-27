@@ -1,0 +1,15 @@
+<div class="container" *ngIf="source && source.length > 0">
+  <mat-list>
+    <mat-list-item *ngFor="let list of source" (click)="goToDetail(list)">
+      <img matListAvatar src="{{ list.image }}" alt="image" [class.not-profile]="list.imgType == imgType.NotProfile" *ngIf="list.image">
+      <mat-icon matListIcon *ngIf="!list.image">music_note</mat-icon>
+      <h3 mat-line>{{ list.name }}</h3>
+      <p mat-line>
+        <ng-container *ngFor="let subList of list.subLists; let i = index">
+          {{ subList.name }}
+          <span *ngIf="i < list.subLists.length - 1">-</span>
+        </ng-container>
+      </p>
+    </mat-list-item>
+  </mat-list>
+</div>

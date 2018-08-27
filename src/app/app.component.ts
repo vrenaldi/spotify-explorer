@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil, take } from "rxjs/operators";
 
 import { DataService } from './services/data.service';
-import { User } from './models/user.model';
+import { User } from './models/spotify.model';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.dataService.toolbarHeight.pipe(takeUntil(this.unsubscribe))
       .subscribe(toolbarHeight => { this.toolbarHeight = toolbarHeight; })
-    this.dataService.user.pipe(takeUntil(this.unsubscribe))
+    this.dataService.currUser.pipe(takeUntil(this.unsubscribe))
       .subscribe(userProfile => { this.user = userProfile; });
 
     this.router.events.pipe(take(1)).subscribe((event: RouterEvent) => {

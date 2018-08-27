@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+import { map } from 'rxjs/operators';
+
 import { DataService } from './data.service';
+import { Batch, Playlist, User } from '../models/spotify.model';
 
 @Injectable({
   providedIn: 'root'
@@ -60,12 +63,53 @@ export class SpotifyService {
     return this.http.get(`${this.baseEndpoint}me`, options);
   }
 
+  getCurrUserPlaylists(currBatch: Batch) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch], currBatch)
+    };
+    return this.http.get(`${this.baseEndpoint}me/playlists`, options).pipe(
+      map((results: any) => {
+        let playlists: Playlist[] = [];
+
+        results.items.forEach(item => {
+          let owner = new User(item.owner.id, item.owner.display_name);
+          playlists.push(new Playlist(item.id, item.name, owner, this.extractImage(item.images)));
+        });
+        return [playlists, results.total];
+      })
+    );
+  }
+
+  createPlaylist(name: string, user: User) {
+    let options = { headers: this.generateHeaders() };
+    let body = { name: name };
+    return this.http.post(`${this.baseEndpoint}users/${user.id}/playlists`, body, options);
+  }
+
   generateHeaders() {
     let headers = { "Authorization": `Bearer ${this.dataService.fragments.accessToken}` };
     return headers;
   }
 
+  generateParams(paramTypes: ParamType[], values: any) {
+    let params: any = {};
+
+    paramTypes.forEach(paramType => {
+      if (paramType == ParamType.Batch) {
+        params.limit = values.limit.toString();
+        params.offset = values.offset.toString();
+      }
+    });
+
+    return params;
+  }
+
   extractImage(images): string {
     return (images && images.length > 0) ? images[0].url : "";
   }
+}
+
+enum ParamType {
+  Batch
 }

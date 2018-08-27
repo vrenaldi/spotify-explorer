@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { User } from '../models/user.model';
+import { User } from '../models/spotify.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,7 @@ export class DataService {
   fragments: SpotifyFragments;
 
   toolbarHeight: BehaviorSubject<number>;
-  user: BehaviorSubject<User>;
+  currUser: BehaviorSubject<User>;
 
   constructor() {
     this.tabsHeight = 49;
@@ -20,7 +20,7 @@ export class DataService {
     this.fragments = { accessToken: "", state: "" };
 
     this.toolbarHeight = new BehaviorSubject(56);
-    this.user = new BehaviorSubject(new User("", ""));
+    this.currUser = new BehaviorSubject(new User("", ""));
   }
 }
 

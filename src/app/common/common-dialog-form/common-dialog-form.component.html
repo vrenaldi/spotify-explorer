@@ -1,0 +1,14 @@
+<form [formGroup]="contentForm" (ngSubmit)="formSubmit()" [ngSwitch]="data">
+  <h1 mat-dialog-title>{{title}}</h1>
+  <mat-dialog-content>
+    <ng-container *ngSwitchCase="dialogType.CreatePlaylist">
+      <mat-form-field>
+        <input matInput formControlName="playlistName" placeholder="Playlist Name">
+      </mat-form-field>
+    </ng-container>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button type="submit" [disabled]="!contentForm.valid">{{btnSubmitLabel}}</button>
+    <button mat-button type="button" mat-dialog-close>Cancel</button>
+  </mat-dialog-actions>
+</form>

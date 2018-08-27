@@ -1,0 +1,8 @@
+<div [style.paddingTop.px]="tabsHeight" infiniteScroll (scrolled)="loadMore()">
+  <common-list [source]="playlists"></common-list>
+  <mat-spinner [diameter]="56" *ngIf="isLoading"></mat-spinner>
+
+  <button mat-fab color="primary" (click)="createPlaylist()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>

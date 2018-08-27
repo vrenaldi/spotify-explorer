@@ -7,7 +7,7 @@ import { takeUntil, filter, map } from 'rxjs/operators';
 
 import { DataService } from '../services/data.service';
 import { SpotifyService } from '../services/spotify.service';
-import { User } from '../models/user.model';
+import { User } from '../models/spotify.model';
 
 @Component({
   template: ""
@@ -36,10 +36,9 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.spotifyService.getCurrUserProfile().pipe(takeUntil(this.unsubscribe))
         .subscribe(
           (user: any) => {
-            this.dataService.user.next(new User(user.id, user.display_name, this.spotifyService.extractImage(user.images), user.country, user.email));
+            this.dataService.currUser.next(new User(user.id, user.display_name, this.spotifyService.extractImage(user.images), user.country, user.email));
 
-            // let redirectURL: string = "/library/playlists";
-            let redirectURL: string = "/library";
+            let redirectURL: string = "/library/playlists";
             if (localStorage.getItem("redirectURL")) {
               redirectURL = localStorage.getItem("redirectURL");
               localStorage.removeItem("redirectURL");
