@@ -130,6 +130,34 @@ export class SpotifyService {
   // ========================================
 
 
+  // ========================================
+  // Albums
+  // ========================================
+  getCurrUserSavedAlbums(currBatch: Batch) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch], currBatch)
+    };
+    return this.http.get(`${this.baseEndpoint}me/albums`, options).pipe(
+      map((results: any) => {
+        let albums: Album[] = [];
+
+        results.items.forEach(item => {
+          let album = item.album;
+          let artists: Artist[] = [];
+
+          album.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          albums.push(new Album(album.id, album.name, artists, this.extractImage(album.images)));
+        });
+        return [albums, results.total];
+      })
+    );
+  }
+  // ========================================
+
   generateHeaders() {
     let headers = { "Authorization": `Bearer ${this.dataService.fragments.accessToken}` };
     return headers;

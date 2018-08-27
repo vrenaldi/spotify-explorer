@@ -9,6 +9,7 @@ import { LibraryRoutingModule } from './library-routing.module';
 import { LibraryComponent } from './library.component';
 import { LibraryPlaylistsComponent } from './library-playlists/library-playlists.component';
 import { LibraryTracksComponent } from './library-tracks/library-tracks.component';
+import { LibraryAlbumsComponent } from './library-albums/library-albums.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,8 @@ import { LibraryTracksComponent } from './library-tracks/library-tracks.componen
   declarations: [
     LibraryComponent,
     LibraryPlaylistsComponent,
-    LibraryTracksComponent
+    LibraryTracksComponent,
+    LibraryAlbumsComponent
   ]
 })
 export class LibraryModule { }
