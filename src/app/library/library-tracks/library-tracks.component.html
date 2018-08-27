@@ -1,0 +1,4 @@
+<div [style.paddingTop.px]="tabsHeight" infiniteScroll (scrolled)="loadMore()">
+  <common-list-tracks [source]="tracks" (oRemoveTrack)="removeTrack($event)"></common-list-tracks>
+  <mat-spinner [diameter]="56" *ngIf="isLoading"></mat-spinner>
+</div>

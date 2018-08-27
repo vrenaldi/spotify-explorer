@@ -42,7 +42,7 @@ export class LibraryPlaylistsComponent implements OnInit, OnDestroy {
     this.total = 0;
     this.isLoading = false;
 
-    this.getCurrUserPlaylists(new Batch(10));
+    this.getCurrUserPlaylists(new Batch());
   }
 
   getCurrUserPlaylists(currBatch: Batch) {
@@ -66,7 +66,7 @@ export class LibraryPlaylistsComponent implements OnInit, OnDestroy {
   loadMore() {
     if ((this.playlists.length >= this.total) || this.isLoading) return;
 
-    this.getCurrUserPlaylists(new Batch(10, this.playlists.length, this.playlists[this.playlists.length - 1].id));
+    this.getCurrUserPlaylists(new Batch(40, this.playlists.length, this.playlists[this.playlists.length - 1].id));
   }
 
   createPlaylist() {

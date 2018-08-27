@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
 import { DataService } from './data.service';
-import { Batch, Playlist, User } from '../models/spotify.model';
+import { Batch, Playlist, User, Track, Artist, Album } from '../models/spotify.model';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +63,9 @@ export class SpotifyService {
     return this.http.get(`${this.baseEndpoint}me`, options);
   }
 
+  // ========================================
+  // Playlists
+  // ========================================
   getCurrUserPlaylists(currBatch: Batch) {
     let options = {
       headers: this.generateHeaders(),
@@ -86,6 +89,46 @@ export class SpotifyService {
     let body = { name: name };
     return this.http.post(`${this.baseEndpoint}users/${user.id}/playlists`, body, options);
   }
+  // ========================================
+
+
+  // ========================================
+  // Tracks
+  // ========================================
+  getCurrUserSavedTracks(currBatch: Batch) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch], currBatch)
+    };
+    return this.http.get(`${this.baseEndpoint}me/tracks`, options).pipe(
+      map((results: any) => {
+        let tracks: Track[] = [];
+
+        results.items.forEach(item => {
+          let track = item.track;
+          let artists: Artist[] = [];
+          let album = new Album(track.album.id, track.album.name, [], this.extractImage(track.album.images));
+
+          track.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          tracks.push(new Track(track.id, track.name, track.duration_ms, true, track.uri, track.preview_url, artists, album));
+        });
+        return [tracks, results.total];
+      })
+    );
+  }
+
+  removeTracksUser(tracks: Track[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], tracks)
+    };
+    return this.http.delete(`${this.baseEndpoint}me/tracks`, options);
+  }
+  // ========================================
+
 
   generateHeaders() {
     let headers = { "Authorization": `Bearer ${this.dataService.fragments.accessToken}` };
@@ -100,6 +143,11 @@ export class SpotifyService {
         params.limit = values.limit.toString();
         params.offset = values.offset.toString();
       }
+      if (paramType == ParamType.Ids) {
+        params.ids = "";
+        values.forEach(element => { params.ids += `${element.id.toString()},`; });
+        params.ids = params.ids.slice(0, -1);
+      }
     });
 
     return params;
@@ -111,5 +159,6 @@ export class SpotifyService {
 }
 
 enum ParamType {
-  Batch
+  Batch,
+  Ids
 }

@@ -1,0 +1,29 @@
+<div class="container" *ngIf="source && source.length > 0">
+  <mat-list>
+    <mat-list-item *ngFor="let track of source; let i = index" (click)="previewTrack($event, audio, track, i)">
+      <img matListAvatar src="{{ track.album.image }}" alt="image" *ngIf="track.album.image">
+      <mat-icon matListIcon *ngIf="!track.album.image" [class.hidden]="nowPlaying == i">music_note</mat-icon>
+      <div class="now-playing" *ngIf="nowPlaying == i">
+        <mat-progress-spinner [diameter]="56" [value]="currPreviewProgress"></mat-progress-spinner>
+        <mat-icon matListIcon>stop</mat-icon>
+      </div>
+      <h3 mat-line>{{ track.name }}</h3>
+      <p mat-line>
+        <ng-container *ngFor="let artist of track.artists; let i = index">
+          {{ artist.name }}
+          <span *ngIf="i < track.artists.length - 1">-</span>
+        </ng-container>
+      </p>
+      <p class="duration" *ngIf="showDuration && track.duration>0">{{ track.duration | date:'mm:ss' }}</p>
+      <audio src="{{track.previewURL}}" #audio (ended)="resetPreview(i)" (timeupdate)="previewProgressUpdate(i)"></audio>
+      <button mat-icon-button [matMenuTriggerFor]="trackMenu">
+        <mat-icon class="more-vert">more_vert</mat-icon>
+      </button>
+      <mat-menu #trackMenu="matMenu">
+        <button mat-menu-item *ngIf="track.isSaved" (click)="removeTrack(track, i)">
+          <span>Remove from your Library</span>
+        </button>
+      </mat-menu>
+    </mat-list-item>
+  </mat-list>
+</div>

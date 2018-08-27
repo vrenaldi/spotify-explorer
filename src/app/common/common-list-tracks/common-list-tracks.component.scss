@@ -1,0 +1,38 @@
+.container { padding: .5rem; }
+
+mat-list-item { cursor: pointer; }
+
+img {
+    width: 56px !important;
+    height: 56px !important;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+}
+
+mat-icon {
+    width: 32px !important;
+    height: 32px !important;
+    padding: 12px !important;
+    font-size: 32px !important;
+}
+
+div.now-playing {
+    width: 56px;
+    height: 56px;
+    position: absolute;
+
+    > mat-progress-spinner { background-color: rgba(0, 0, 0, 0.288); }
+
+    > mat-icon { 
+        position: absolute;
+        top: 0;
+        background-color: rgba(0, 0, 0, 0.288);
+    }
+}
+
+.hidden { opacity: 0; }
+
+button mat-icon {
+    padding: 5px 1px 0 0 !important;
+    font-size: 24px !important;
+}
