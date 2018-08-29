@@ -405,6 +405,97 @@ export class SpotifyService {
       })
     );
   }
+
+  getArtist(artistId: string) {
+    let options = { headers: this.generateHeaders() };
+    return this.http.get(`${this.baseEndpoint}artists/${artistId}`, options).pipe(
+      map((result: any) => {
+        return new Artist(result.id, result.name, this.extractImage(result.images));
+      })
+    );
+  }
+
+  getArtistTopTracks(artistId: string, user: User) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Localization], user)
+    };
+    let tracks: Track[];
+    return this.http.get(`${this.baseEndpoint}artists/${artistId}/top-tracks`, options).pipe(
+      concatMap((results: any) => {
+        tracks = [];
+
+        results.tracks.forEach(track => {
+          let artists: Artist[] = [];
+          let album = new Album(track.album.id, track.album.name, [], this.extractImage(track.album.images));
+
+          track.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          tracks.push(new Track(track.id, track.name, track.duration_ms, false, track.uri, track.preview_url, artists, album));
+        });
+        return this.checkCurrUserSavedTracks(tracks);
+      }),
+      map((results: any) => {
+        results.forEach((result, resultIndex) => {
+          tracks[resultIndex].isSaved = result;
+        });
+        return tracks;
+      })
+    );
+  }
+
+  getArtistAlbums(artistId: string, currBatch: Batch) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch], currBatch)
+    };
+    options.params.include_groups = "album";
+    return this.http.get(`${this.baseEndpoint}artists/${artistId}/albums`, options).pipe(
+      map((results: any) => {
+        let albums: Album[] = [];
+
+        results.items.forEach(item => {
+          let artists: Artist[] = [];
+
+          item.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          albums.push(new Album(item.id, item.name, artists, this.extractImage(item.images)));
+        });
+        return [albums, results.total];
+      })
+    );
+  }
+
+  checkCurrUserFollowsArtists(artists: Artist[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], artists)
+    };
+    options.params.type = "artist";
+    return this.http.get(`${this.baseEndpoint}me/following/contains`, options);
+  }
+
+  followArtists(artists: Artist[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], artists)
+    };
+    options.params.type = "artist";
+    return this.http.put(`${this.baseEndpoint}me/following`, {}, options);
+  }
+
+  unfollowArtists(artists: Artist[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], artists)
+    };
+    options.params.type = "artist";
+    return this.http.delete(`${this.baseEndpoint}me/following`, options);
+  }
   // ========================================
 
   generateHeaders() {
@@ -434,6 +525,9 @@ export class SpotifyService {
         values.forEach(element => { params.uris += `${element.uri.toString()},`; });
         params.uris = params.uris.slice(0, -1);
       }
+      if (paramType == ParamType.Localization) {
+        params.country = values.country.toString();
+      }
     });
 
     return params;
@@ -448,5 +542,6 @@ enum ParamType {
   Batch,
   CursorBatch,
   Ids,
-  URIs
+  URIs,
+  Localization
 }

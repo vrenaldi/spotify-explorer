@@ -1,0 +1,24 @@
+.thumbnail {
+    width: 80vmin;
+    padding: 1rem;
+    margin: 0 auto;
+}
+
+.action {
+    margin-top: -1rem;
+    padding: 0 1rem 0.5rem;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.section-header {
+    margin: 1rem 1.5rem -1rem;
+}
+
+mat-spinner {
+    overflow: hidden;
+    display: block;
+    margin: 1.5rem auto;
+}
