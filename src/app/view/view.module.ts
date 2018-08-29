@@ -8,6 +8,7 @@ import { MaterialModule } from '../material.module';
 import { ViewRoutingModule } from './view-routing.module';
 
 import { ViewPlaylistComponent } from './view-playlist/view-playlist.component';
+import { ViewAlbumComponent } from './view-album/view-album.component';
 
 @NgModule({
   imports: [
@@ -17,6 +18,6 @@ import { ViewPlaylistComponent } from './view-playlist/view-playlist.component';
     MaterialModule,
     ViewRoutingModule
   ],
-  declarations: [ViewPlaylistComponent]
+  declarations: [ViewPlaylistComponent, ViewAlbumComponent]
 })
 export class ViewModule { }

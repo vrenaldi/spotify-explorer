@@ -22,11 +22,11 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
 
   ownerId: string;
   playlistId: string;
-  isFollowed: boolean;
   initLoading: boolean;
 
   playlist: Thumbnail;
   tracks: Track[];
+  isFollowed: boolean;
   total: number;
   isLoading: boolean;
 
@@ -45,7 +45,7 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dataService.currUser.pipe(takeUntil(this.unsubscribe))
-      .subscribe(user => { this.currUser = user; });
+      .subscribe(currUser => { this.currUser = currUser; });
 
     this.ownerId = this.route.snapshot.paramMap.get("ownerId");
     this.playlistId = this.route.snapshot.paramMap.get("playlistId");
@@ -68,12 +68,12 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
 
         return this.spotifyService.checkUsersFollowPlaylist(this.ownerId, this.playlistId, [this.currUser])
       }),
-      takeUntil(this.unsubscribe))
-      .subscribe(
-        (result: boolean) => {
-          this.isFollowed = result[0];
-          this.initLoading = false;
-        },
+      takeUntil(this.unsubscribe)
+    ).subscribe(
+      (result: boolean) => {
+        this.isFollowed = result[0];
+        this.initLoading = false;
+      },
       // (response: HttpErrorResponse) => {
       //   localStorage.setItem("redirectURL", `/view/playlist/${this.playlistId}/user/${this.ownerId}`);
       //   this.spotifyService.onError(response);

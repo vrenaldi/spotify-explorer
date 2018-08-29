@@ -1,0 +1,22 @@
+<div infiniteScroll (scrolled)="loadMore()">
+  <ng-container *ngIf="!initLoading">
+    <div class="thumbnail">
+      <common-thumbnail [source]="album"></common-thumbnail>
+    </div>
+
+    <div class="action" *ngIf="!isOwner">
+      <button mat-icon-button (click)="toggleSavedAlbum()">
+        <mat-icon color="primary" *ngIf="isSaved">favorite</mat-icon>
+        <mat-icon *ngIf="!isSaved">favorite_border</mat-icon>
+      </button>
+    </div>
+
+    <ng-container *ngIf="tracks && tracks.length>0">
+      <mat-divider></mat-divider>
+      <h2 class="section-header">Songs</h2>
+      <common-list-tracks [source]="tracks"></common-list-tracks>
+      <mat-spinner [diameter]="56" *ngIf="isLoading"></mat-spinner>
+    </ng-container>
+  </ng-container>
+  <mat-spinner [diameter]="56" *ngIf="initLoading"></mat-spinner>
+</div>

@@ -285,6 +285,103 @@ export class SpotifyService {
       })
     );
   }
+
+  getAlbum(albumId: string) {
+    let options = { headers: this.generateHeaders() };
+    let album: Album;
+    let total: number;
+
+    return this.http.get(`${this.baseEndpoint}albums/${albumId}`, options).pipe(
+      concatMap((result: any) => {
+        let artists: Artist[] = [];
+        let tracks: Track[] = [];
+
+        result.artists.forEach(artist => {
+          artists.push(new Artist(artist.id, artist.name));
+        });
+
+        let limit = Math.min(result.tracks.total, new Batch().limit);
+        for (let i = 0; i < limit; i++) {
+          let track = result.tracks.items[i];
+          let artists: Artist[] = [];
+
+          track.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          tracks.push(new Track(track.id, track.name, track.duration_ms, false, track.uri, track.preview_url, artists));
+        };
+        album = new Album(result.id, result.name, artists, this.extractImage(result.images), tracks);
+        total = result.tracks.total
+
+        return this.checkCurrUserSavedTracks(tracks);
+      }),
+      map((results: any) => {
+        results.forEach((result, resultIndex) => {
+          album.tracks[resultIndex].isSaved = result;
+        });
+        return [album, total];
+      })
+    );
+  }
+
+  getAlbumTracks(albumId: string, currBatch: Batch) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch], currBatch)
+    };
+    let tracks: Track[];
+    let total: number;
+
+    return this.http.get(`${this.baseEndpoint}albums/${albumId}/tracks`, options).pipe(
+      concatMap((results: any) => {
+        tracks = [];
+
+        results.items.forEach(item => {
+          let track = item;
+          let artists: Artist[] = [];
+
+          track.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          tracks.push(new Track(track.id, track.name, track.duration_ms, false, track.uri, track.preview_url, artists));
+        });
+        total = results.total;
+        return this.checkCurrUserSavedTracks(tracks);
+      }),
+      map((results: any) => {
+        results.forEach((result, resultIndex) => {
+          tracks[resultIndex].isSaved = result;
+        });
+        return [tracks, total];
+      })
+    );
+  }
+
+  checkCurrUserSavedAlbums(albums: Album[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], albums)
+    };
+    return this.http.get(`${this.baseEndpoint}me/albums/contains`, options);
+  }
+
+  saveAlbumsCurrUser(albums: Album[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], albums)
+    };
+    return this.http.put(`${this.baseEndpoint}me/albums`, {}, options);
+  }
+
+  removeAlbumsCurrUser(albums: Album[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], albums)
+    };
+    return this.http.delete(`${this.baseEndpoint}me/albums`, options);
+  }
   // ========================================
 
 
