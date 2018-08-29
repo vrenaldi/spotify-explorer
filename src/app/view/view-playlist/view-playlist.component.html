@@ -1,0 +1,29 @@
+<div infiniteScroll (scrolled)="loadMore()">
+  <ng-container *ngIf="!initLoading">
+    <div class="thumbnail">
+      <common-thumbnail [source]="playlist"></common-thumbnail>
+    </div>
+
+    <div class="action" *ngIf="ownerId != currUser.id">
+      <button mat-icon-button (click)="toggleFollowedPlaylist()">
+        <mat-icon color="primary" *ngIf="isFollowed">favorite</mat-icon>
+        <mat-icon *ngIf="!isFollowed">favorite_border</mat-icon>
+      </button>
+    </div>
+
+    <div class="action" *ngIf="ownerId == currUser.id">
+      <button mat-icon-button (click)="deletePlaylist()">
+        <mat-icon>delete_outline</mat-icon>
+      </button>
+    </div>
+
+    <ng-container *ngIf="tracks && tracks.length>0">
+      <mat-divider></mat-divider>
+      <h2 class="section-header">Songs</h2>
+      <common-list-tracks [source]="tracks" [isRemovableFromPlaylist]="ownerId == currUser.id" (oAddToPlaylist)="addToPlaylist($event)"
+        (oRemoveFromPlaylist)="removeFromPlaylist($event)"></common-list-tracks>
+      <mat-spinner [diameter]="56" *ngIf="isLoading"></mat-spinner>
+    </ng-container>
+  </ng-container>
+  <mat-spinner [diameter]="56" *ngIf="initLoading"></mat-spinner>
+</div>

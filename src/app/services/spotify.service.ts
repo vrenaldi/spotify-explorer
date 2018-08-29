@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { map } from 'rxjs/operators';
+import { map, concatMap } from 'rxjs/operators';
 
 import { DataService } from './data.service';
 import { Batch, Playlist, User, Track, Artist, Album } from '../models/spotify.model';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +90,126 @@ export class SpotifyService {
     let body = { name: name };
     return this.http.post(`${this.baseEndpoint}users/${user.id}/playlists`, body, options);
   }
+
+  checkUsersFollowPlaylist(ownerId: string, playlistId: string, users: User[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], users)
+    };
+    return this.http.get(`${this.baseEndpoint}users/${ownerId}/playlists/${playlistId}/followers/contains`, options);
+  }
+
+  followPlaylist(ownerId: string, playlistId: string) {
+    let options = { headers: this.generateHeaders() };
+    return this.http.put(`${this.baseEndpoint}users/${ownerId}/playlists/${playlistId}/followers`, {}, options);
+  }
+
+  unfollowPlaylist(ownerId: string, playlistId: string) {
+    let options = { headers: this.generateHeaders() };
+    return this.http.delete(`${this.baseEndpoint}users/${ownerId}/playlists/${playlistId}/followers`, options);
+  }
+
+  getPlaylist(ownerId: string, playlistId: string) {
+    let options = { headers: this.generateHeaders() };
+    let playlist: Playlist;
+    let total: number;
+
+    return this.http.get(`${this.baseEndpoint}users/${ownerId}/playlists/${playlistId}`, options).pipe(
+      concatMap((result: any) => {
+        let owner: User = new User(result.owner.id, result.owner.display_name);
+        let tracks: Track[] = [];
+
+        let limit = Math.min(result.tracks.total, new Batch().limit);
+        for (let i = 0; i < limit; i++) {
+          let track = result.tracks.items[i].track;
+          let artists: Artist[] = [];
+          let album = new Album(track.album.id, track.album.name, [], this.extractImage(track.album.images));
+
+          track.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          tracks.push(new Track(track.id, track.name, track.duration_ms, false, track.uri, track.preview_url, artists, album));
+        };
+
+        playlist = new Playlist(result.id, result.name, owner, this.extractImage(result.images), tracks);
+        total = result.tracks.total;
+
+        return this.checkCurrUserSavedTracks(tracks);
+      }),
+      map((results: any) => {
+        results.forEach((result, resultIndex) => {
+          playlist.tracks[resultIndex].isSaved = result;
+        });
+
+        return [playlist, total];
+      })
+    );
+  }
+
+  getPlaylistTracks(ownerId: string, playlistId: string, currBatch: Batch) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch], currBatch)
+    };
+    let tracks: Track[];
+    let total: number;
+
+    return this.http.get(`${this.baseEndpoint}users/${ownerId}/playlists/${playlistId}/tracks`, options).pipe(
+      concatMap((results: any) => {
+        tracks = [];
+        total = results.total;
+
+        results.items.forEach(item => {
+          let track = item.track;
+          let artists: Artist[] = [];
+          let album = new Album(track.album.id, track.album.name, [], this.extractImage(track.album.images));
+
+          track.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          tracks.push(new Track(track.id, track.name, track.duration_ms, false, track.uri, track.preview_url, artists, album));
+        });
+        return this.checkCurrUserSavedTracks(tracks);
+      }),
+      map((results: any) => {
+        results.forEach((result, resultIndex) => {
+          tracks[resultIndex].isSaved = result;
+        });
+        return [tracks, total];
+      })
+    );
+  }
+
+  checkCurrUserSavedTracks(tracks: Track[]) {
+    if (tracks.length == 0) return of([]);
+
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], tracks)
+    };
+    return this.http.get(`${this.baseEndpoint}me/tracks/contains`, options);
+  }
+
+  addTracksPlaylist(playlist: Playlist, tracks: Track[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.URIs], tracks)
+    };
+    return this.http.post(`${this.baseEndpoint}users/${playlist.owner.id}/playlists/${playlist.id}/tracks`, {}, options);
+  }
+
+  removeTracksPlaylist(playlist: Playlist, tracks: Track[], position: number[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      body: { "tracks": [] }
+    };
+    tracks.forEach((track, trackIndex) => {
+      options.body.tracks.push({ "uri": track.uri, "positions": [position[trackIndex]] });
+    });
+    return this.http.delete(`${this.baseEndpoint}users/${playlist.owner.id}/playlists/${playlist.id}/tracks`, options);
+  }
   // ========================================
 
 
@@ -118,6 +239,14 @@ export class SpotifyService {
         return [tracks, results.total];
       })
     );
+  }
+
+  saveTracksUser(tracks: Track[]) {
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Ids], tracks)
+    };
+    return this.http.put(`${this.baseEndpoint}me/tracks`, {}, options);
   }
 
   removeTracksUser(tracks: Track[]) {
@@ -203,6 +332,11 @@ export class SpotifyService {
         values.forEach(element => { params.ids += `${element.id.toString()},`; });
         params.ids = params.ids.slice(0, -1);
       }
+      if (paramType == ParamType.URIs) {
+        params.uris = "";
+        values.forEach(element => { params.uris += `${element.uri.toString()},`; });
+        params.uris = params.uris.slice(0, -1);
+      }
     });
 
     return params;
@@ -216,5 +350,6 @@ export class SpotifyService {
 enum ParamType {
   Batch,
   CursorBatch,
-  Ids
+  Ids,
+  URIs
 }

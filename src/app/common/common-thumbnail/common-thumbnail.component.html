@@ -1,0 +1,13 @@
+<div #imgThumbnail class="img-thumbnail" [class.outline]="!source.image" [class.profile]="source.imgType == imgType.Profile">
+  <img mat-card-image src="{{ source.image }}" alt="image" [class.profile]="source.imgType == imgType.Profile" *ngIf="source.image">
+  <mat-icon *ngIf="!source.image && source.imgType == imgType.NotProfile" [ngStyle]="setIconSize()">music_note</mat-icon>
+  <mat-icon *ngIf="!source.image && source.imgType == imgType.Profile" [ngStyle]="setIconSize()">person</mat-icon>
+</div>
+<div class="footer-thumbnail">
+  <strong>{{ source.name }}</strong>
+  <br>
+  <ng-container *ngFor="let subThumbnail of source.subThumbnails; let i = index">
+    {{ subThumbnail.name }}
+    <span *ngIf="i < source.subThumbnails.length - 1">-</span>
+  </ng-container>
+</div>

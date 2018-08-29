@@ -1,2 +1,8 @@
 mat-form-field { width: 100%; }
 mat-dialog-actions { flex-direction: row-reverse; }
+
+mat-spinner {
+    overflow: hidden;
+    display: block;
+    margin: 1.5rem auto;
+}

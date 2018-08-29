@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil, filter, switchMap } from 'rxjs/operators';
@@ -30,7 +31,8 @@ export class LibraryPlaylistsComponent implements OnInit, OnDestroy {
   constructor(
     private dataService: DataService,
     private spotifyService: SpotifyService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -77,11 +79,11 @@ export class LibraryPlaylistsComponent implements OnInit, OnDestroy {
       switchMap(formValue => this.spotifyService.createPlaylist(formValue.playlistName, this.currUser)),
       takeUntil(this.unsubscribe)
     ).subscribe(
-      // (result: any) => { this.router.navigate(["view", "playlist", result.id, "user", this.user.id]); },
-      //   // (response: HttpErrorResponse) => {
-      //   //   localStorage.setItem("redirectURL", "/library/playlists");
-      //   //   this.spotifyService.onError(response);
-      //   // }
+      (result: any) => { this.router.navigate(["view", "playlist", result.id, "user", this.currUser.id]); },
+      // (response: HttpErrorResponse) => {
+      //   localStorage.setItem("redirectURL", "/library/playlists");
+      //   this.spotifyService.onError(response);
+      // }
     );
   }
 

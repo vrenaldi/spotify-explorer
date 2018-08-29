@@ -1,10 +1,18 @@
 <form [formGroup]="contentForm" (ngSubmit)="formSubmit()" [ngSwitch]="data">
   <h1 mat-dialog-title>{{title}}</h1>
-  <mat-dialog-content>
+  <mat-dialog-content infiniteScroll [scrollWindow]="false" (scrolled)="loadMore()">
     <ng-container *ngSwitchCase="dialogType.CreatePlaylist">
       <mat-form-field>
         <input matInput formControlName="playlistName" placeholder="Playlist Name">
       </mat-form-field>
+    </ng-container>
+    <ng-container *ngSwitchCase="dialogType.AddToPlaylist">
+      <mat-selection-list #selectPlaylists formControlName="playlists">
+        <mat-list-option *ngFor="let playlist of playlistsFiltered" [value]="playlist">
+          {{playlist.name}}
+        </mat-list-option>
+      </mat-selection-list>
+      <mat-spinner [diameter]="56" *ngIf="isLoading"></mat-spinner>
     </ng-container>
   </mat-dialog-content>
   <mat-dialog-actions>

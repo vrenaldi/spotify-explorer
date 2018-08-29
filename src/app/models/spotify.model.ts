@@ -3,6 +3,7 @@ export { Artist } from "./artist.model";
 export { Batch } from "./batch.model";
 export { List } from "./list.model";
 export { Playlist } from "./playlist.model";
+export { Thumbnail } from "./thumbnail.model";
 export { Track } from "./track.model";
 export { User } from "./user.model";
 
@@ -15,10 +16,15 @@ export enum ImgType {
 }
 
 export enum DialogType {
-    CreatePlaylist
+    CreatePlaylist,
+    DeletePlaylist,
+    AddToPlaylist
 }
 
 export enum SnackBarType {
+    LibrarySaved,
     LibraryRemoved,
+    PlaylistAdded,
+    PlaylistRemoved,
     PreviewNotAvailable
 }

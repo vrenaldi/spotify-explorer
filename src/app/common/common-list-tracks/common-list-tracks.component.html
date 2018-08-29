@@ -20,8 +20,17 @@
         <mat-icon class="more-vert">more_vert</mat-icon>
       </button>
       <mat-menu #trackMenu="matMenu">
+        <button mat-menu-item *ngIf="!track.isSaved" (click)="saveTrack(track, i)">
+          <span>Save to your Library</span>
+        </button>
         <button mat-menu-item *ngIf="track.isSaved" (click)="removeTrack(track, i)">
           <span>Remove from your Library</span>
+        </button>
+        <button mat-menu-item (click)="addToPlaylist(track)">
+          <span>Add to Playlist</span>
+        </button>
+        <button mat-menu-item *ngIf="isRemovableFromPlaylist" (click)="removeFromPlaylist(track, i)">
+          <span>Remove from this Playlist</span>
         </button>
       </mat-menu>
     </mat-list-item>

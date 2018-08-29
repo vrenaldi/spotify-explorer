@@ -9,10 +9,10 @@
   <mat-sidenav #snav [mode]="'over'" [fixedInViewport]="true" [fixedTopGap]="toolbarHeight" [autoFocus]="false">
     <mat-nav-list>
       <mat-list-item>
-        <img matListAvatar src="{{ user.image || 'assets/defaultUser.png' }}" alt="profile picture">
-        <h2 matLine>{{ user.name || 'Username' }}</h2>
+        <img matListAvatar src="{{ currUser.image || 'assets/defaultUser.png' }}" alt="profile picture">
+        <h2 matLine>{{ currUser.name || 'Username' }}</h2>
         <p matLine>
-          <span>{{ user.email || 'Email' }}</span>
+          <span>{{ currUser.email || 'Email' }}</span>
         </p>
       </mat-list-item>
       <mat-divider></mat-divider>

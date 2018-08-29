@@ -1,4 +1,5 @@
 import { User } from "./user.model";
+import { Track } from "./track.model";
 
 export class Playlist {
     constructor(
@@ -6,6 +7,6 @@ export class Playlist {
         public name: string,
         public owner: User,
         public image: string = "",
-        // public tracks: Track[] = []
+        public tracks: Track[] = []
     ) { }
 }

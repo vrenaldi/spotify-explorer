@@ -1,0 +1,47 @@
+.img-thumbnail {
+    width: 50vmin;
+    max-width: 250px;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+
+    &.profile {
+        border-radius: 50% !important;
+    }
+}
+
+.img-thumbnail::before {
+	content: "";
+    padding-top: 100%;
+    display: block;
+}
+
+.outline {
+    border: 1px solid white !important;
+    border-radius: 2px;
+}
+
+img, mat-icon {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    &.profile {
+        border-radius: 50% !important;
+    }
+}
+
+.footer-thumbnail {
+    padding: 0.5rem;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    text-align: center;
+}

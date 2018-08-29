@@ -15,7 +15,7 @@ import { User } from './models/spotify.model';
 })
 export class AppComponent implements OnInit, OnDestroy {
   toolbarHeight: number;
-  user: User;
+  currUser: User;
 
   unsubscribe: Subject<any> = new Subject();
 
@@ -34,7 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.dataService.toolbarHeight.pipe(takeUntil(this.unsubscribe))
       .subscribe(toolbarHeight => { this.toolbarHeight = toolbarHeight; })
     this.dataService.currUser.pipe(takeUntil(this.unsubscribe))
-      .subscribe(userProfile => { this.user = userProfile; });
+      .subscribe(userProfile => { this.currUser = userProfile; });
 
     this.router.events.pipe(take(1)).subscribe((event: RouterEvent) => {
       if (event instanceof NavigationStart) {
