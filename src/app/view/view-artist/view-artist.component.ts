@@ -69,11 +69,7 @@ export class ViewArtistComponent implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe)
     ).subscribe(
       ([albums, total]: [Album[], number]) => {
-        this.albums = this.albums.concat(albums.map(album => new List(album.id, album.name, ImgType.NotProfile
-          , album.image, ["album"], album.artists)));
-        this.total = total;
-
-        this.isLoading = false;
+        this.subsToGetArtistAlbums(albums, total);
         this.initLoading = false;
       },
       // (response: HttpErrorResponse) => {
@@ -90,10 +86,7 @@ export class ViewArtistComponent implements OnInit, OnDestroy {
     this.spotifyService.getArtistAlbums(this.artistId, new Batch(40, this.albums.length, this.albums[this.albums.length - 1].id)).pipe(takeUntil(this.unsubscribe))
       .subscribe(
         ([albums, total]: [Album[], number]) => {
-          this.albums = this.albums.concat(albums.map(album => new List(album.id, album.name, ImgType.NotProfile
-            , album.image, ["album"], album.artists)));
-          this.total = total;
-
+          this.subsToGetArtistAlbums(albums, total);
           this.isLoading = false;
         },
       // (response: HttpErrorResponse) => {
@@ -101,6 +94,12 @@ export class ViewArtistComponent implements OnInit, OnDestroy {
       //   this.spotifyService.onError(response);
       // }
     );
+  }
+
+  subsToGetArtistAlbums(albums: Album[], total: number) {
+    this.albums = this.albums.concat(albums.map(album => new List(album.id, album.name, ImgType.NotProfile
+      , album.image, ["album"], album.artists)));
+    this.total = total;
   }
 
   toggleFollowedArtist() {

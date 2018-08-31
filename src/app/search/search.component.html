@@ -1,0 +1,16 @@
+<div class="container">
+  <form (ngSubmit)="formSubmit()">
+    <mat-form-field class="form-item">
+      <input matInput placeholder="Search" #inputSearch>
+    </mat-form-field>
+  </form>
+
+  <div mat-tab-nav-bar *ngIf="query.length>0">
+    <a mat-tab-link *ngFor="let route of routes" routerLink="{{route.path}}/{{query}}" routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive" [routerLinkActiveOptions]="{ __change_detection_hack__: query }">
+      {{ route.label }}
+    </a>
+  </div>
+</div>
+
+<router-outlet></router-outlet>

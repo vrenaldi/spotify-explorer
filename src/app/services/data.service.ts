@@ -8,6 +8,7 @@ import { User } from '../models/spotify.model';
 })
 export class DataService {
   readonly tabsHeight: number;
+  readonly formItemHeight: number;
 
   fragments: SpotifyFragments;
 
@@ -16,6 +17,7 @@ export class DataService {
 
   constructor() {
     this.tabsHeight = 49;
+    this.formItemHeight = 56.56;
 
     this.fragments = { accessToken: "", state: "" };
 

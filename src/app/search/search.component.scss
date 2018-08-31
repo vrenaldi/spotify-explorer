@@ -1,0 +1,20 @@
+.container {
+    position: fixed;
+    z-index: 2;
+    padding: 1rem 0;
+    box-sizing: border-box;
+    width: 100vw;
+    background-color: #303030;
+}
+
+.form-item {
+    padding: 0 1rem;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.mat-tab-link {
+    flex: 1 1 0;
+
+    &.mat-tab-label-active { opacity: 1; }
+}

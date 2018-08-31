@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, concatMap } from 'rxjs/operators';
 
 import { DataService } from './data.service';
-import { Batch, Playlist, User, Track, Artist, Album } from '../models/spotify.model';
+import { Batch, Playlist, User, Track, Artist, Album, Search } from '../models/spotify.model';
 import { of } from 'rxjs';
 
 @Injectable({
@@ -13,6 +13,8 @@ import { of } from 'rxjs';
 export class SpotifyService {
   readonly baseEndpoint = "	https://api.spotify.com/v1/";
   readonly stateKey = "spotify_auth_state";
+
+  readonly maxSearchOffset = 10000;
 
   constructor(
     private dataService: DataService,
@@ -496,6 +498,26 @@ export class SpotifyService {
     options.params.type = "artist";
     return this.http.delete(`${this.baseEndpoint}me/following`, options);
   }
+
+  searchArtists(params: Search, currBatch: Batch) {
+    let values: any = { ...params, ...currBatch };
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch, ParamType.Search], values)
+    };
+    return this.http.get(`${this.baseEndpoint}search`, options).pipe(
+      map((results: any) => {
+        let artists: Artist[] = [];
+
+        results.artists.items.sort((a, b) => +b.popularity - +a.popularity);
+        results.artists.items.forEach(item => {
+          artists.push(new Artist(item.id, item.name, this.extractImage(item.images)));
+        });
+
+        return [artists, Math.min(results.artists.total, this.maxSearchOffset)];
+      })
+    );
+  }
   // ========================================
 
   generateHeaders() {
@@ -528,6 +550,10 @@ export class SpotifyService {
       if (paramType == ParamType.Localization) {
         params.country = values.country.toString();
       }
+      if (paramType == ParamType.Search) {
+        params.q = values.q.toString();
+        params.type = values.type.toString();
+      }
     });
 
     return params;
@@ -543,5 +569,6 @@ enum ParamType {
   CursorBatch,
   Ids,
   URIs,
-  Localization
+  Localization,
+  Search
 }

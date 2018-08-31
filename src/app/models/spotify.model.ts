@@ -3,6 +3,7 @@ export { Artist } from "./artist.model";
 export { Batch } from "./batch.model";
 export { List } from "./list.model";
 export { Playlist } from "./playlist.model";
+export { Search } from "./search.model";
 export { Thumbnail } from "./thumbnail.model";
 export { Track } from "./track.model";
 export { User } from "./user.model";
