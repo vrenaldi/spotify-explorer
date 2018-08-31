@@ -60,9 +60,7 @@ export class SearchTracksComponent implements OnInit, OnDestroy {
     if ((this.tracks.length >= this.total) || this.isLoading) return;
 
     this.isLoading = true;
-    let currBatch = new Batch(40, this.tracks.length, this.tracks[this.tracks.length - 1].id);
-
-    this.spotifyService.searchTracks(this.search, currBatch).pipe(takeUntil(this.unsubscribe))
+    this.spotifyService.searchTracks(this.search, new Batch(40, this.tracks.length, this.tracks[this.tracks.length - 1].id)).pipe(takeUntil(this.unsubscribe))
       .subscribe(
         ([tracks, total]: [Track[], number]) => {
           this.subsToSearchTracks(tracks, total);

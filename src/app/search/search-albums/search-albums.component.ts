@@ -60,9 +60,7 @@ export class SearchAlbumsComponent implements OnInit, OnDestroy {
     if ((this.albums.length >= this.total) || this.isLoading) return;
 
     this.isLoading = true;
-    let currBatch = new Batch(40, this.albums.length, this.albums[this.albums.length - 1].id);
-
-    this.spotifyService.searchAlbums(this.search, currBatch).pipe(takeUntil(this.unsubscribe))
+    this.spotifyService.searchAlbums(this.search, new Batch(40, this.albums.length, this.albums[this.albums.length - 1].id)).pipe(takeUntil(this.unsubscribe))
       .subscribe(
         ([albums, total]: [Album[], number]) => {
           this.subsToSearchAlbums(albums, total);

@@ -212,6 +212,25 @@ export class SpotifyService {
     });
     return this.http.delete(`${this.baseEndpoint}users/${playlist.owner.id}/playlists/${playlist.id}/tracks`, options);
   }
+  
+  searchPlaylists(params: Search, currBatch: Batch) {
+    let values: any = { ...params, ...currBatch };
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch, ParamType.Search], values)
+    };
+    return this.http.get(`${this.baseEndpoint}search`, options).pipe(
+      map((results: any) => {
+        let playlists: Playlist[] = [];
+
+        results.playlists.items.forEach(item => {
+          let owner = new User(item.owner.id, item.owner.display_name);
+          playlists.push(new Playlist(item.id, item.name, owner, this.extractImage(item.images)));
+        });
+        return [playlists, Math.min(results.playlists.total, this.maxSearchOffset)];
+      })
+    );
+  }
   // ========================================
 
 

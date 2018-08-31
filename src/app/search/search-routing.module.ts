@@ -5,6 +5,7 @@ import { SearchComponent } from './search.component';
 import { SearchArtistsComponent } from './search-artists/search-artists.component';
 import { SearchTracksComponent } from './search-tracks/search-tracks.component';
 import { SearchAlbumsComponent } from './search-albums/search-albums.component';
+import { SearchPlaylistsComponent } from './search-playlists/search-playlists.component';
 
 const routes: Routes = [
   {
@@ -12,7 +13,7 @@ const routes: Routes = [
       { path: "artists/:query", component: SearchArtistsComponent },
       { path: "tracks/:query", component: SearchTracksComponent },
       { path: "albums/:query", component: SearchAlbumsComponent },
-      // { path: "playlists/:query", component: SearchPlaylistsComponent }
+      { path: "playlists/:query", component: SearchPlaylistsComponent }
     ]
   }
 ];

@@ -11,6 +11,7 @@ import { SearchComponent } from './search.component';
 import { SearchArtistsComponent } from './search-artists/search-artists.component';
 import { SearchTracksComponent } from './search-tracks/search-tracks.component';
 import { SearchAlbumsComponent } from './search-albums/search-albums.component';
+import { SearchPlaylistsComponent } from './search-playlists/search-playlists.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import { SearchAlbumsComponent } from './search-albums/search-albums.component';
     MaterialModule,
     SearchRoutingModule
   ],
-  declarations: [SearchComponent, SearchArtistsComponent, SearchTracksComponent, SearchAlbumsComponent]
+  declarations: [SearchComponent, SearchArtistsComponent, SearchTracksComponent, SearchAlbumsComponent, SearchPlaylistsComponent]
 })
 export class SearchModule { }
