@@ -9,6 +9,7 @@ import { SearchRoutingModule } from './search-routing.module';
 
 import { SearchComponent } from './search.component';
 import { SearchArtistsComponent } from './search-artists/search-artists.component';
+import { SearchTracksComponent } from './search-tracks/search-tracks.component';
 
 @NgModule({
   imports: [
@@ -19,6 +20,6 @@ import { SearchArtistsComponent } from './search-artists/search-artists.componen
     MaterialModule,
     SearchRoutingModule
   ],
-  declarations: [SearchComponent, SearchArtistsComponent]
+  declarations: [SearchComponent, SearchArtistsComponent, SearchTracksComponent]
 })
 export class SearchModule { }

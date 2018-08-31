@@ -60,6 +60,8 @@ export class SearchArtistsComponent implements OnInit, OnDestroy {
   }
 
   loadMore() {
+    if ((this.artists.length >= this.total) || this.isLoading) return;
+
     this.isLoading = true;
     this.spotifyService.searchArtists(this.search, new Batch(40, this.artists.length, this.artists[this.artists.length - 1].id)).pipe(takeUntil(this.unsubscribe))
       .subscribe(

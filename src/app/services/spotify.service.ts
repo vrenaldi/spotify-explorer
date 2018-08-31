@@ -258,6 +258,42 @@ export class SpotifyService {
     };
     return this.http.delete(`${this.baseEndpoint}me/tracks`, options);
   }
+
+  searchTracks(params: Search, currBatch: Batch) {
+    let values: any = { ...params, ...currBatch };
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch, ParamType.Search], values)
+    };
+    let tracks: Track[];
+    let total: number;
+
+    return this.http.get(`${this.baseEndpoint}search`, options).pipe(
+      concatMap((results: any) => {
+        tracks = [];
+
+        results.tracks.items.forEach(item => {
+          let artists: Artist[] = [];
+          let album = new Album(item.album.id, item.album.name, [], this.extractImage(item.album.images));
+
+          item.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          tracks.push(new Track(item.id, item.name, item.duration_ms, false, item.uri, item.preview_url, artists, album));
+        });
+        total = results.tracks.total;
+
+        return this.checkCurrUserSavedTracks(tracks);
+      }),
+      map((results: any) => {
+        results.forEach((result, resultIndex) => {
+          tracks[resultIndex].isSaved = result;
+        });
+        return [tracks, Math.min(total, this.maxSearchOffset)];
+      })
+    );
+  }
   // ========================================
 
 
