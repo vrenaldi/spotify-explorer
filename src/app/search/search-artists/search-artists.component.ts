@@ -30,14 +30,12 @@ export class SearchArtistsComponent implements OnInit, OnDestroy {
     private dataService: DataService,
     private spotifyService: SpotifyService
   ) {
-    this.artists = [];
-    this.total = 0;
-    this.isLoading = false;
   }
 
   ngOnInit() {
     this.formItemHeight = this.dataService.formItemHeight;
     this.tabsHeight = this.dataService.tabsHeight;
+    this.total = 0;
 
     this.route.paramMap.pipe(
       switchMap(param => {

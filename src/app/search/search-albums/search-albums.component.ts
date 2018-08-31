@@ -6,20 +6,20 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 
 import { DataService } from '../../services/data.service';
 import { SpotifyService } from '../../services/spotify.service';
-import { Track, Search, Batch } from '../../models/spotify.model';
+import { List, Search, ImgType, Album, Batch } from '../../models/spotify.model';
 
 @Component({
-  selector: 'app-search-tracks',
-  templateUrl: './search-tracks.component.html',
-  styleUrls: ['./search-tracks.component.scss']
+  selector: 'app-search-albums',
+  templateUrl: './search-albums.component.html',
+  styleUrls: ['./search-albums.component.scss']
 })
-export class SearchTracksComponent implements OnInit, OnDestroy {
+export class SearchAlbumsComponent implements OnInit, OnDestroy {
   formItemHeight: number;
   tabsHeight: number;
 
   search: Search;
 
-  tracks: Track[];
+  albums: List[];
   total: number;
   isLoading: boolean;
 
@@ -38,45 +38,46 @@ export class SearchTracksComponent implements OnInit, OnDestroy {
 
     this.route.paramMap.pipe(
       switchMap(param => {
-        this.search = { q: param.get("query"), type: "track" };
-        this.tracks = [];
+        this.search = { q: param.get("query"), type: "album" };
+        this.albums = [];
         this.isLoading = true;
-        return this.spotifyService.searchTracks(this.search, new Batch());
+        return this.spotifyService.searchAlbums(this.search, new Batch());
       }),
       takeUntil(this.unsubscribe)
     ).subscribe(
-      ([tracks, total]: [Track[], number]) => {
-        this.subsToSearchTracks(tracks, total);
+      ([albums, total]: [Album[], number]) => {
+        this.subsToSearchAlbums(albums, total);
         this.isLoading = false;
       },
       // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/search/tracks/${this.search.q}`);
+      //   localStorage.setItem("redirectURL", `/search/albums/${this.search.q}`);
       //   this.spotifyService.onError(response);
       // }
-    );
+    )
   }
 
   loadMore() {
-    if ((this.tracks.length >= this.total) || this.isLoading) return;
+    if ((this.albums.length >= this.total) || this.isLoading) return;
 
     this.isLoading = true;
-    let currBatch = new Batch(40, this.tracks.length, this.tracks[this.tracks.length - 1].id);
+    let currBatch = new Batch(40, this.albums.length, this.albums[this.albums.length - 1].id);
 
-    this.spotifyService.searchTracks(this.search, currBatch).pipe(takeUntil(this.unsubscribe))
+    this.spotifyService.searchAlbums(this.search, currBatch).pipe(takeUntil(this.unsubscribe))
       .subscribe(
-        ([tracks, total]: [Track[], number]) => {
-          this.subsToSearchTracks(tracks, total);
+        ([albums, total]: [Album[], number]) => {
+          this.subsToSearchAlbums(albums, total);
           this.isLoading = false;
         },
       // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/search/tracks/${this.search.q}`);
+      //   localStorage.setItem("redirectURL", `/search/albums/${this.search.q}`);
       //   this.spotifyService.onError(response);
       // }
     );
   }
 
-  subsToSearchTracks(tracks: Track[], total: number) {
-    this.tracks = this.tracks.concat(tracks);
+  subsToSearchAlbums(albums: Album[], total: number) {
+    this.albums = this.albums.concat(albums.map(album => new List(album.id, album.name, ImgType.NotProfile
+      , album.image, ["album"], album.artists)));
     this.total = total;
   }
 

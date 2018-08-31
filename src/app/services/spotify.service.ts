@@ -420,6 +420,30 @@ export class SpotifyService {
     };
     return this.http.delete(`${this.baseEndpoint}me/albums`, options);
   }
+  
+  searchAlbums(params: Search, currBatch: Batch) {
+    let values: any = { ...params, ...currBatch };
+    let options = {
+      headers: this.generateHeaders(),
+      params: this.generateParams([ParamType.Batch, ParamType.Search], values)
+    };
+    return this.http.get(`${this.baseEndpoint}search`, options).pipe(
+      map((results: any) => {
+        let albums: Album[] = [];
+
+        results.albums.items.forEach(item => {
+          let artists: Artist[] = [];
+
+          item.artists.forEach(artist => {
+            artists.push(new Artist(artist.id, artist.name));
+          });
+
+          albums.push(new Album(item.id, item.name, artists, this.extractImage(item.images)));
+        });
+        return [albums, Math.min(results.albums.total, this.maxSearchOffset)];
+      })
+    );
+  }
   // ========================================
 
 
