@@ -1,0 +1,38 @@
+$container-padding: 1.5rem;
+$gutter-size: .75rem;
+$item-width: calc((100% / 2) - (1/2)*#{$gutter-size});
+
+.container {
+    padding: $container-padding;
+
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.container::after {
+    content: "";
+    flex: auto;
+}
+
+.item {
+    width: $item-width;
+    margin-right: #{$gutter-size};
+    margin-bottom: #{$gutter-size};
+
+    cursor: pointer;
+    // text-align: center;
+
+    &.lastInRow { margin-right: 0; }
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1279px) {
+    $item-width: calc((100% / 4) - (3/4)*#{$gutter-size});
+
+    .item { width: $item-width; }
+}
+
+@media only screen and (min-width: 1280px) {
+    $item-width: calc((100% / 8) - (7/8)*#{$gutter-size});
+
+    .item { width: $item-width; }
+}

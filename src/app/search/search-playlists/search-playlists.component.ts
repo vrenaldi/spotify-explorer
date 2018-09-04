@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -17,6 +18,8 @@ export class SearchPlaylistsComponent implements OnInit {
   formItemHeight: number;
   tabsHeight: number;
 
+  isSmall: boolean;
+
   search: Search;
 
   playlists: List[];
@@ -27,6 +30,7 @@ export class SearchPlaylistsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private breakpointObserver: BreakpointObserver,
     private dataService: DataService,
     private spotifyService: SpotifyService
   ) { }
@@ -34,6 +38,12 @@ export class SearchPlaylistsComponent implements OnInit {
   ngOnInit() {
     this.formItemHeight = this.dataService.formItemHeight;
     this.tabsHeight = this.dataService.tabsHeight;
+    this.breakpointObserver.observe("(min-width: 450px)").pipe(takeUntil(this.unsubscribe))
+      .subscribe(result => {
+        if (result.matches) this.isSmall = false;
+        else this.isSmall = true;
+      });
+
     this.total = 0;
 
     this.route.paramMap.pipe(

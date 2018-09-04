@@ -18,3 +18,11 @@
 
     &.mat-tab-label-active { opacity: 1; }
 }
+
+@media only screen and (min-width: 600px) and (max-width: 639px) {
+    .mat-tab-link { min-width: 72px; }
+}
+
+@media only screen and (min-width: 800px) {
+    .mat-tab-link { max-width: 160px; }
+}

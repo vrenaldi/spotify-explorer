@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs';
 import { takeUntil, concatMap } from 'rxjs/operators';
 
-import { Thumbnail, Track, ImgType, Album, User, Batch, SnackBarType } from '../../models/spotify.model';
+import { Thumbnail, Track, ImgType, Album, User, Batch, SnackBarType, ThumbnailType } from '../../models/spotify.model';
 import { SpotifyService } from '../../services/spotify.service';
 import { DataService } from '../../services/data.service';
 import { CommonSnackBarComponent } from '../../common/common-snack-bar/common-snack-bar.component';
@@ -44,7 +44,7 @@ export class ViewAlbumComponent implements OnInit, OnDestroy {
     this.albumId = this.route.snapshot.paramMap.get("albumId");
     this.initLoading = true;
 
-    this.album = new Thumbnail("", "", ImgType.NotProfile);
+    this.album = new Thumbnail("", "", ImgType.NotProfile, ThumbnailType.View);
     this.tracks = [];
     this.total = 0;
     this.isLoading = false;
@@ -55,7 +55,7 @@ export class ViewAlbumComponent implements OnInit, OnDestroy {
   getAlbum() {
     this.spotifyService.getAlbum(this.albumId).pipe(
       concatMap(([album, total]: [Album, number]) => {
-        this.album = new Thumbnail(album.id, album.name, ImgType.NotProfile, album.image, album.artists);
+        this.album = new Thumbnail(album.id, album.name, ImgType.NotProfile, ThumbnailType.View, album.image, album.artists);
         this.tracks = this.tracks.concat(album.tracks);
         this.total = total;
 

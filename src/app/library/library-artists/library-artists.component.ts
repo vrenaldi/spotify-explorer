@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -14,6 +15,7 @@ import { List, Batch, ImgType, Artist } from '../../models/spotify.model';
 })
 export class LibraryArtistsComponent implements OnInit, OnDestroy {
   tabsHeight: number;
+  isSmall: boolean;
 
   artists: List[];
   total: number;
@@ -22,12 +24,18 @@ export class LibraryArtistsComponent implements OnInit, OnDestroy {
   unsubscribe: Subject<any> = new Subject();
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private dataService: DataService,
     private spotifyService: SpotifyService
   ) { }
 
   ngOnInit() {
     this.tabsHeight = this.dataService.tabsHeight;
+    this.breakpointObserver.observe("(min-width: 450px)").pipe(takeUntil(this.unsubscribe))
+      .subscribe(result => {
+        if (result.matches) this.isSmall = false;
+        else this.isSmall = true;
+      });
 
     this.artists = [];
     this.total = 0;

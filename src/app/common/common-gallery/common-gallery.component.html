@@ -1,0 +1,5 @@
+<div class="container" *ngIf="source && source.length > 0">
+  <div class="item" *ngFor="let item of source; let i=index;" (click)="goToDetail(item)" [class.lastInRow]="lastInRow(i)">
+    <common-thumbnail [source]="toThumbnail(item)"></common-thumbnail>
+  </div>
+</div>

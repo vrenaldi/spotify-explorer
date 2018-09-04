@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
 
 import { Subject } from 'rxjs';
 import { takeUntil, filter, switchMap } from 'rxjs/operators';
@@ -20,6 +21,8 @@ export class LibraryPlaylistsComponent implements OnInit, OnDestroy {
   tabsHeight: number;
   currUser: User;
 
+  isSmall: boolean;
+
   playlists: List[];
   total: number;
   isLoading: boolean;
@@ -29,6 +32,7 @@ export class LibraryPlaylistsComponent implements OnInit, OnDestroy {
   unsubscribe: Subject<any> = new Subject();
 
   constructor(
+    private breakpointObserver: BreakpointObserver,
     private dataService: DataService,
     private spotifyService: SpotifyService,
     private dialog: MatDialog,
@@ -39,6 +43,12 @@ export class LibraryPlaylistsComponent implements OnInit, OnDestroy {
     this.tabsHeight = this.dataService.tabsHeight;
     this.dataService.currUser.pipe(takeUntil(this.unsubscribe))
       .subscribe(currUser => { this.currUser = currUser; });
+
+    this.breakpointObserver.observe("(min-width: 450px)").pipe(takeUntil(this.unsubscribe))
+      .subscribe(result => {
+        if (result.matches) this.isSmall = false;
+        else this.isSmall = true;
+      });
 
     this.playlists = [];
     this.total = 0;

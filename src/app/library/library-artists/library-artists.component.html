@@ -1,4 +1,5 @@
 <div [style.paddingTop.px]="tabsHeight" infiniteScroll (scrolled)="loadMore()">
-  <common-list [source]="artists"></common-list>
+  <common-list [source]="artists" *ngIf="isSmall"></common-list>
+  <common-gallery [source]="artists" *ngIf="!isSmall"></common-gallery>
   <mat-spinner [diameter]="56" *ngIf="isLoading"></mat-spinner>
 </div>

@@ -7,7 +7,7 @@ import { takeUntil, filter, switchMap, concatMap } from 'rxjs/operators';
 
 import { DataService } from '../../services/data.service';
 import { SpotifyService } from '../../services/spotify.service';
-import { User, DialogType, SnackBarType, Track, Thumbnail, ImgType, Playlist, Batch } from '../../models/spotify.model';
+import { User, DialogType, SnackBarType, Track, Thumbnail, ImgType, Playlist, Batch, ThumbnailType } from '../../models/spotify.model';
 
 import { CommonDialogConfirmationComponent } from '../../common/common-dialog-confirmation/common-dialog-confirmation.component';
 import { CommonSnackBarComponent } from '../../common/common-snack-bar/common-snack-bar.component';
@@ -51,7 +51,7 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
     this.playlistId = this.route.snapshot.paramMap.get("playlistId");
     this.initLoading = true;
 
-    this.playlist = new Thumbnail("", "", ImgType.NotProfile);
+    this.playlist = new Thumbnail("", "", ImgType.NotProfile, ThumbnailType.View);
     this.tracks = [];
     this.total = 0;
     this.isLoading = false;
@@ -62,7 +62,7 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
   getPlaylist() {
     this.spotifyService.getPlaylist(this.ownerId, this.playlistId).pipe(
       concatMap(([playlist, total]: [Playlist, number]) => {
-        this.playlist = new Thumbnail(playlist.id, playlist.name, ImgType.NotProfile, playlist.image, [playlist.owner]);
+        this.playlist = new Thumbnail(playlist.id, playlist.name, ImgType.NotProfile, ThumbnailType.View, playlist.image, [playlist.owner]);
         this.tracks = this.tracks.concat(playlist.tracks);
         this.total = total;
 

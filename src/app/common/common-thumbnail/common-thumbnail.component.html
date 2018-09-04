@@ -1,4 +1,5 @@
-<div #imgThumbnail class="img-thumbnail" [class.outline]="!source.image" [class.profile]="source.imgType == imgType.Profile">
+<div #imgThumbnail class="img-thumbnail" [class.outline]="!source.image" [class.profile]="source.imgType == imgType.Profile"
+  [class.view]="source.thumbnailType == thumbnailType.View">
   <img mat-card-image src="{{ source.image }}" alt="image" [class.profile]="source.imgType == imgType.Profile" *ngIf="source.image">
   <mat-icon *ngIf="!source.image && source.imgType == imgType.NotProfile" [ngStyle]="setIconSize()">music_note</mat-icon>
   <mat-icon *ngIf="!source.image && source.imgType == imgType.Profile" [ngStyle]="setIconSize()">person</mat-icon>

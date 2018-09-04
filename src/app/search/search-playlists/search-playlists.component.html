@@ -1,5 +1,6 @@
 <div [style.paddingTop.px]="formItemHeight + tabsHeight" infiniteScroll (scrolled)="loadMore()">
   <div class="workaround"></div>
-  <common-list [source]="playlists"></common-list>
+  <common-list [source]="playlists" *ngIf="isSmall"></common-list>
+  <common-gallery [source]="playlists" *ngIf="!isSmall"></common-gallery>
   <mat-spinner [diameter]="56" *ngIf="isLoading"></mat-spinner>
 </div>

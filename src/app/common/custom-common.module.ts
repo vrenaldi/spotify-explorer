@@ -11,6 +11,7 @@ import { CommonListTracksComponent } from './common-list-tracks/common-list-trac
 import { CommonSnackBarComponent } from './common-snack-bar/common-snack-bar.component';
 import { CommonDialogConfirmationComponent } from './common-dialog-confirmation/common-dialog-confirmation.component';
 import { CommonThumbnailComponent } from './common-thumbnail/common-thumbnail.component';
+import { CommonGalleryComponent } from './common-gallery/common-gallery.component';
 
 @NgModule({
   imports: [
@@ -22,7 +23,8 @@ import { CommonThumbnailComponent } from './common-thumbnail/common-thumbnail.co
   exports: [
     CommonListComponent,
     CommonListTracksComponent,
-    CommonThumbnailComponent
+    CommonThumbnailComponent,
+    CommonGalleryComponent
   ],
   declarations: [
     CommonListComponent,
@@ -30,7 +32,8 @@ import { CommonThumbnailComponent } from './common-thumbnail/common-thumbnail.co
     CommonListTracksComponent,
     CommonSnackBarComponent,
     CommonDialogConfirmationComponent,
-    CommonThumbnailComponent
+    CommonThumbnailComponent,
+    CommonGalleryComponent
   ],
   entryComponents: [
     CommonDialogFormComponent,

@@ -1,12 +1,16 @@
 .img-thumbnail {
-    width: 50vmin;
-    max-width: 250px;
-    margin: 0 auto;
+    width: 100%;
     position: relative;
     text-align: center;
 
     &.profile {
         border-radius: 50% !important;
+    }
+
+    &.view {
+        width: 50vmin;
+        max-width: 250px;
+        margin: 0 auto;
     }
 }
 
