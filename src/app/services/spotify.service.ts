@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { MatDialogRef, MatDialog } from '@angular/material';
 
-import { map, concatMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { map, concatMap, filter, take } from 'rxjs/operators';
 
 import { DataService } from './data.service';
-import { Batch, Playlist, User, Track, Artist, Album, Search } from '../models/spotify.model';
-import { of } from 'rxjs';
+import { Batch, Playlist, User, Track, Artist, Album, Search, DialogType } from '../models/spotify.model';
+import { CommonDialogConfirmationComponent } from '../common/common-dialog-confirmation/common-dialog-confirmation.component';
 
 @Injectable({
   providedIn: 'root'
@@ -16,9 +18,12 @@ export class SpotifyService {
 
   readonly maxSearchOffset = 10000;
 
+  dialogConfirmationRef: MatDialogRef<CommonDialogConfirmationComponent>;
+
   constructor(
     private dataService: DataService,
-    private http: HttpClient
+    private http: HttpClient,
+    private dialog: MatDialog
   ) { }
 
   checkLogin(): boolean {
@@ -212,7 +217,7 @@ export class SpotifyService {
     });
     return this.http.delete(`${this.baseEndpoint}users/${playlist.owner.id}/playlists/${playlist.id}/tracks`, options);
   }
-  
+
   searchPlaylists(params: Search, currBatch: Batch) {
     let values: any = { ...params, ...currBatch };
     let options = {
@@ -439,7 +444,7 @@ export class SpotifyService {
     };
     return this.http.delete(`${this.baseEndpoint}me/albums`, options);
   }
-  
+
   searchAlbums(params: Search, currBatch: Batch) {
     let values: any = { ...params, ...currBatch };
     let options = {
@@ -640,6 +645,26 @@ export class SpotifyService {
 
   extractImage(images): string {
     return (images && images.length > 0) ? images[0].url : "";
+  }
+
+  onError(response: HttpErrorResponse) {
+    let error = response.error.error;
+
+    if (error.status == 401) {
+      let message: string[] = error.message.toLowerCase().split(" ");
+
+      if (message.includes("token") && message.includes("expired")) {
+        this.dialogConfirmationRef = this.dialog.open(CommonDialogConfirmationComponent, { data: DialogType.TokenExpired });
+
+        this.dialogConfirmationRef.afterClosed().pipe(
+          filter(isConfirm => isConfirm),
+          take(1)
+        ).subscribe(() => {
+          localStorage.removeItem(this.stateKey);
+          this.checkLogin();
+        });
+      }
+    }
   }
 }
 

@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,7 +25,8 @@ export class LibraryTracksComponent implements OnInit, OnDestroy {
 
   constructor(
     private dataService: DataService,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -46,11 +49,11 @@ export class LibraryTracksComponent implements OnInit, OnDestroy {
 
           this.isLoading = false;
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", "/library/tracks");
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   loadMore() {

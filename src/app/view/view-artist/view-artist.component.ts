@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject } from 'rxjs';
 import { takeUntil, concatMap } from 'rxjs/operators';
@@ -34,7 +35,8 @@ export class ViewArtistComponent implements OnInit, OnDestroy {
     private dataService: DataService,
     private spotifyService: SpotifyService,
     private route: ActivatedRoute,
-    public matSnackBar: MatSnackBar
+    public matSnackBar: MatSnackBar,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -72,10 +74,10 @@ export class ViewArtistComponent implements OnInit, OnDestroy {
         this.subsToGetArtistAlbums(albums, total);
         this.initLoading = false;
       },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/view/artist/${this.artistId}`);
-      //   this.spotifyService.onError(response);
-      // }
+      (response: HttpErrorResponse) => {
+        localStorage.setItem("redirectURL", this.router.url);
+        this.spotifyService.onError(response);
+      }
     );
   }
 
@@ -89,11 +91,11 @@ export class ViewArtistComponent implements OnInit, OnDestroy {
           this.subsToGetArtistAlbums(albums, total);
           this.isLoading = false;
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/view/artist/${this.artistId}`);
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   subsToGetArtistAlbums(albums: Album[], total: number) {
@@ -110,11 +112,11 @@ export class ViewArtistComponent implements OnInit, OnDestroy {
             this.isFollowed = !this.isFollowed;
             this.matSnackBar.openFromComponent(CommonSnackBarComponent, { duration: 2000, data: SnackBarType.LibraryRemoved });
           },
-        // (response: HttpErrorResponse) => {
-        //   localStorage.setItem("redirectURL", `/view/artist/${this.artistId}`);
-        //   this.spotifyService.onError(response);
-        // }
-      );
+          (response: HttpErrorResponse) => {
+            localStorage.setItem("redirectURL", this.router.url);
+            this.spotifyService.onError(response);
+          }
+        );
     }
     else {
       this.spotifyService.followArtists([new Artist(this.artistId, "")]).pipe(takeUntil(this.unsubscribe))
@@ -123,11 +125,11 @@ export class ViewArtistComponent implements OnInit, OnDestroy {
             this.isFollowed = !this.isFollowed;
             this.matSnackBar.openFromComponent(CommonSnackBarComponent, { duration: 2000, data: SnackBarType.LibrarySaved });
           },
-        // (response: HttpErrorResponse) => {
-        //   localStorage.setItem("redirectURL", `/view/artist/${this.artistId}`);
-        //   this.spotifyService.onError(response);
-        // }
-      );
+          (response: HttpErrorResponse) => {
+            localStorage.setItem("redirectURL", this.router.url);
+            this.spotifyService.onError(response);
+          }
+        );
     }
   }
 

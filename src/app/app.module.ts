@@ -3,6 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
+import { CustomCommonModule } from './common/custom-common.module';
 import { LoginModule } from './login/login.module';
 import { MaterialModule } from "./material.module";
 
@@ -17,6 +18,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    CustomCommonModule,
     LoginModule,
     MaterialModule,
     AppRoutingModule

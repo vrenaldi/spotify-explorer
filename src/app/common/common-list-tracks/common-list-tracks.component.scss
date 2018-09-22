@@ -20,8 +20,7 @@ div.now-playing {
     width: 56px;
     height: 56px;
     position: absolute;
-
-    > mat-progress-spinner { background-color: rgba(0, 0, 0, 0.288); }
+    background-color: rgba(0, 0, 0, 0.288);
 
     > mat-icon { 
         position: absolute;

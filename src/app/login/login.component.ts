@@ -33,23 +33,22 @@ export class LoginComponent implements OnInit, OnDestroy {
         if (fragment[0] == "state") this.dataService.fragments.state = fragment[1];
       });
 
+      let redirectURL: string = "/library/playlists";
+      if (localStorage.getItem("redirectURL")) {
+        redirectURL = localStorage.getItem("redirectURL");
+        localStorage.removeItem("redirectURL");
+      }
+
       this.spotifyService.getCurrUserProfile().pipe(takeUntil(this.unsubscribe))
         .subscribe(
           (user: any) => {
             this.dataService.currUser.next(new User(user.id, user.display_name, this.spotifyService.extractImage(user.images), user.country, user.email));
-
-            let redirectURL: string = "/library/playlists";
-            if (localStorage.getItem("redirectURL")) {
-              redirectURL = localStorage.getItem("redirectURL");
-              localStorage.removeItem("redirectURL");
-            }
-
-            this.router.navigate([redirectURL]);
+            this.router.navigate([decodeURI(redirectURL)]);
           },
-          // (response: HttpErrorResponse) => {
-          //   localStorage.setItem("redirectURL", "/library/playlists");
-          //   this.spotifyService.onError(response);
-          // }
+          (response: HttpErrorResponse) => {
+            localStorage.setItem("redirectURL", redirectURL);
+            this.spotifyService.onError(response);
+          }
         );
     });
   }

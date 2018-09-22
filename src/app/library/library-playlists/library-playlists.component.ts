@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
 
 import { Subject } from 'rxjs';
@@ -11,6 +11,7 @@ import { SpotifyService } from '../../services/spotify.service';
 import { Batch, Playlist, List, ImgType, DialogType, User } from '../../models/spotify.model';
 
 import { CommonDialogFormComponent } from '../../common/common-dialog-form/common-dialog-form.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-library-playlists',
@@ -68,11 +69,11 @@ export class LibraryPlaylistsComponent implements OnInit, OnDestroy {
 
           this.isLoading = false;
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", "/library/playlists");
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   loadMore() {
@@ -90,10 +91,10 @@ export class LibraryPlaylistsComponent implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe)
     ).subscribe(
       (result: any) => { this.router.navigate(["view", "playlist", result.id, "user", this.currUser.id]); },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", "/library/playlists");
-      //   this.spotifyService.onError(response);
-      // }
+      (response: HttpErrorResponse) => {
+        localStorage.setItem("redirectURL", this.router.url);
+        this.spotifyService.onError(response);
+      }
     );
   }
 

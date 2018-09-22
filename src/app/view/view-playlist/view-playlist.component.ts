@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialogRef, MatDialog, MatSnackBar } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject } from 'rxjs';
 import { takeUntil, filter, switchMap, concatMap } from 'rxjs/operators';
@@ -74,10 +75,10 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
         this.isFollowed = result[0];
         this.initLoading = false;
       },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/view/playlist/${this.playlistId}/user/${this.ownerId}`);
-      //   this.spotifyService.onError(response);
-      // }
+      (response: HttpErrorResponse) => {
+        localStorage.setItem("redirectURL", this.router.url);
+        this.spotifyService.onError(response);
+      }
     );
   }
 
@@ -97,11 +98,11 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
 
           this.isLoading = false;
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/view/playlist/${this.playlistId}/user/${this.ownerId}`);
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   toggleFollowedPlaylist() {
@@ -112,11 +113,11 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
             this.isFollowed = !this.isFollowed;
             this.matSnackBar.openFromComponent(CommonSnackBarComponent, { duration: 2000, data: SnackBarType.LibraryRemoved });
           },
-        // (response: HttpErrorResponse) => {
-        //   localStorage.setItem("redirectURL", `/view/playlist/${this.playlistId}/user/${this.ownerId}`);
-        //   this.spotifyService.onError(response);
-        // }
-      );
+          (response: HttpErrorResponse) => {
+            localStorage.setItem("redirectURL", this.router.url);
+            this.spotifyService.onError(response);
+          }
+        );
     }
     else {
       this.spotifyService.followPlaylist(this.ownerId, this.playlistId).pipe(takeUntil(this.unsubscribe))
@@ -125,11 +126,11 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
             this.isFollowed = !this.isFollowed;
             this.matSnackBar.openFromComponent(CommonSnackBarComponent, { duration: 2000, data: SnackBarType.LibrarySaved });
           },
-        // (response: HttpErrorResponse) => {
-        //   localStorage.setItem("redirectURL", `/view/playlist/${this.playlistId}/user/${this.ownerId}`);
-        //   this.spotifyService.onError(response);
-        // }
-      );
+          (response: HttpErrorResponse) => {
+            localStorage.setItem("redirectURL", this.router.url);
+            this.spotifyService.onError(response);
+          }
+        );
     }
   }
 
@@ -145,10 +146,10 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
         this.router.navigate(["library", "playlists"]);
         this.matSnackBar.openFromComponent(CommonSnackBarComponent, { duration: 2000, data: SnackBarType.LibraryRemoved });
       },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/view/playlist/${this.playlistId}/user/${this.ownerId}`);
-      //   this.spotifyService.onError(response);
-      // }
+      (response: HttpErrorResponse) => {
+        localStorage.setItem("redirectURL", this.router.url);
+        this.spotifyService.onError(response);
+      }
     );
   }
 
@@ -166,11 +167,11 @@ export class ViewPlaylistComponent implements OnInit, OnDestroy {
           this.tracks.splice(position, 1);
           this.matSnackBar.openFromComponent(CommonSnackBarComponent, { duration: 2000, data: SnackBarType.PlaylistRemoved });
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/view/playlist/${this.playlistId}/user/${this.ownerId}`);
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   ngOnDestroy() {

@@ -25,7 +25,8 @@ export enum ThumbnailType {
 export enum DialogType {
     CreatePlaylist,
     DeletePlaylist,
-    AddToPlaylist
+    AddToPlaylist,
+    TokenExpired
 }
 
 export enum SnackBarType {

@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -26,7 +28,8 @@ export class LibraryArtistsComponent implements OnInit, OnDestroy {
   constructor(
     private breakpointObserver: BreakpointObserver,
     private dataService: DataService,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -55,11 +58,11 @@ export class LibraryArtistsComponent implements OnInit, OnDestroy {
 
           this.isLoading = false;
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", "/library/artists");
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   loadMore() {

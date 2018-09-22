@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BreakpointObserver } from '@angular/cdk/layout';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -32,7 +33,8 @@ export class SearchArtistsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private breakpointObserver: BreakpointObserver,
     private dataService: DataService,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private router: Router
   ) {
   }
 
@@ -60,10 +62,10 @@ export class SearchArtistsComponent implements OnInit, OnDestroy {
         this.subsToSearchArtists(artists, total);
         this.isLoading = false;
       },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/search/artists/${this.search.q}`);
-      //   this.spotifyService.onError(response);
-      // }
+      (response: HttpErrorResponse) => {
+        localStorage.setItem("redirectURL", this.router.url);
+        this.spotifyService.onError(response);
+      }
     );
   }
 
@@ -77,11 +79,11 @@ export class SearchArtistsComponent implements OnInit, OnDestroy {
           this.subsToSearchArtists(artists, total);
           this.isLoading = false;
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/search/artists/${this.search.q}`);
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   subsToSearchArtists(artists: Artist[], total: number) {

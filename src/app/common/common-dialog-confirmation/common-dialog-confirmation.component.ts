@@ -21,6 +21,10 @@ export class CommonDialogConfirmationComponent implements OnInit {
       this.content = "Do you really want to delete this playlist?";
       this.btnSubmitLabel = "Delete";
     }
+    else if (this.data == DialogType.TokenExpired) {
+      this.content = "Access token is expired. Refresh access token to continue exploring?";
+      this.btnSubmitLabel = "Refresh";
+    }
   }
 
   confirm() { this.dialogRef.close(true); }

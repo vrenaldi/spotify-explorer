@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -28,7 +29,8 @@ export class SearchTracksComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private dataService: DataService,
-    private spotifyService: SpotifyService
+    private spotifyService: SpotifyService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -49,10 +51,10 @@ export class SearchTracksComponent implements OnInit, OnDestroy {
         this.subsToSearchTracks(tracks, total);
         this.isLoading = false;
       },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/search/tracks/${this.search.q}`);
-      //   this.spotifyService.onError(response);
-      // }
+      (response: HttpErrorResponse) => {
+        localStorage.setItem("redirectURL", this.router.url);
+        this.spotifyService.onError(response);
+      }
     );
   }
 
@@ -66,11 +68,11 @@ export class SearchTracksComponent implements OnInit, OnDestroy {
           this.subsToSearchTracks(tracks, total);
           this.isLoading = false;
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", `/search/tracks/${this.search.q}`);
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   subsToSearchTracks(tracks: Track[], total: number) {

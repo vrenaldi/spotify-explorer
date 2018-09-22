@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { MatSnackBar, MatDialogRef, MatDialog } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil, filter, concatMap, concatAll } from 'rxjs/operators';
@@ -33,7 +35,8 @@ export class CommonListTracksComponent implements OnInit, OnDestroy {
   constructor(
     private spotifyService: SpotifyService,
     public matSnackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {
     this.oRemoveTrack = new EventEmitter();
     this.oAddToPlaylist = new EventEmitter();
@@ -82,11 +85,11 @@ export class CommonListTracksComponent implements OnInit, OnDestroy {
           this.source[index].isSaved = true;
           this.matSnackBar.openFromComponent(CommonSnackBarComponent, { duration: 2000, data: SnackBarType.LibrarySaved });
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", "/library/playlists");
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   removeTrack(track: Track, index: number) {
@@ -97,11 +100,11 @@ export class CommonListTracksComponent implements OnInit, OnDestroy {
           this.oRemoveTrack.emit(track);
           this.matSnackBar.openFromComponent(CommonSnackBarComponent, { duration: 2000, data: SnackBarType.LibraryRemoved });
         },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", "/library/playlists");
-      //   this.spotifyService.onError(response);
-      // }
-    );
+        (response: HttpErrorResponse) => {
+          localStorage.setItem("redirectURL", this.router.url);
+          this.spotifyService.onError(response);
+        }
+      );
   }
 
   addToPlaylist(track: Track) {
@@ -122,11 +125,10 @@ export class CommonListTracksComponent implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe)
     ).subscribe(
       () => { },
-      () => { },
-      // (response: HttpErrorResponse) => {
-      //   localStorage.setItem("redirectURL", "/library/playlists");
-      //   this.spotifyService.onError(response);
-      // },
+      (response: HttpErrorResponse) => {
+        localStorage.setItem("redirectURL", this.router.url);
+        this.spotifyService.onError(response);
+      },
       () => {
         if (!isCancelled) {
           this.oAddToPlaylist.emit([selectedPlaylists, track]);
