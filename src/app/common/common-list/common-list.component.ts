@@ -11,6 +11,8 @@ export class CommonListComponent implements OnInit {
   @Input() source: List[];
   imgType = ImgType;
 
+  showingSearchIcon: number;
+
   constructor(private router: Router) { }
 
   ngOnInit() {
@@ -30,4 +32,8 @@ export class CommonListComponent implements OnInit {
 
     this.router.navigate(routes);
   }
+
+  showSearchIcon(index: number) { this.showingSearchIcon = index; }
+
+  hideSearchIcon() { this.showingSearchIcon = undefined; }
 }

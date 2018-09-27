@@ -1,15 +1,16 @@
 .container { padding: .5rem; }
 
-mat-list-item { cursor: pointer; }
+mat-list-item {
+    cursor: pointer;
+    &:hover { background-color: #424242; }
+}
 
 img {
     width: 56px !important;
     height: 56px !important;
     object-fit: cover !important;
 
-    &.not-profile {
-        border-radius: 0 !important;
-    }
+    &.not-profile { border-radius: 0 !important; }
 }
 
 mat-icon {
@@ -17,4 +18,23 @@ mat-icon {
     height: 32px !important;
     padding: 12px !important;
     font-size: 32px !important;
+}
+
+.icon-container {
+    width: 56px;
+    height: 56px;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.288);
+
+    &.profile { border-radius: 50%; }
+}
+
+.hidden { opacity: 0; }
+
+.spacer {
+    min-width: 56px;
+    max-width: 56px;
+    height: 100%;
+
+    order: -1;
 }

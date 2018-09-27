@@ -1,6 +1,9 @@
 .container { padding: .5rem; }
 
-mat-list-item { cursor: pointer; }
+mat-list-item {
+    cursor: pointer;
+    &:hover { background-color: #424242; }
+}
 
 img {
     width: 56px !important;
@@ -16,20 +19,28 @@ mat-icon {
     font-size: 32px !important;
 }
 
-div.now-playing {
+div.now-playing, .icon-container {
     width: 56px;
     height: 56px;
     position: absolute;
     background-color: rgba(0, 0, 0, 0.288);
+}
 
-    > mat-icon { 
-        position: absolute;
-        top: 0;
-        background-color: rgba(0, 0, 0, 0.288);
-    }
+div.now-playing > mat-icon { 
+    position: absolute;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.288);
 }
 
 .hidden { opacity: 0; }
+
+.spacer {
+    min-width: 56px;
+    max-width: 56px;
+    height: 100%;
+
+    order: -1;
+}
 
 button mat-icon {
     padding: 5px 1px 0 0 !important;

@@ -27,6 +27,7 @@ export class CommonListTracksComponent implements OnInit, OnDestroy {
 
   nowPlaying: number;
   currPreviewProgress: number;
+  showingPlayIcon: number;
 
   dialogFormRef: MatDialogRef<CommonDialogFormComponent>;
 
@@ -140,6 +141,10 @@ export class CommonListTracksComponent implements OnInit, OnDestroy {
   removeFromPlaylist(track: Track, position: number) {
     this.oRemoveFromPlaylist.emit([track, position]);
   }
+
+  showPlayIcon(index: number) { this.showingPlayIcon = index; }
+
+  hidePlayIcon() { this.showingPlayIcon = undefined; }
 
   ngOnDestroy() {
     this.unsubscribe.next();

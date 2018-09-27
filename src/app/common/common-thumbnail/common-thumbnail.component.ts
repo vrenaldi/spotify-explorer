@@ -11,20 +11,29 @@ export class CommonThumbnailComponent implements OnInit, AfterViewInit {
   imgType = ImgType;
   thumbnailType = ThumbnailType;
 
+  showingOverlay: boolean;
+  disablingOverlay: boolean;
+
   @ViewChild("imgThumbnail") imgThumbnail: ElementRef;
 
   constructor(private cd: ChangeDetectorRef) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   ngAfterViewInit() { this.cd.detectChanges(); }
 
   setIconSize() {
     let width = +this.imgThumbnail.nativeElement.clientWidth;
     return {
-      'font-size': width / 2 + "px",
-      'top': width / 4 + "px"
+      'font-size': width / 3 + "px",
+      'top': width / 3 + "px"
     };
   }
+
+  showOverlay(index: number) {
+    if (this.source.thumbnailType != ThumbnailType.View)
+      this.showingOverlay = true;
+  }
+
+  hideOverlay() { this.showingOverlay = false; }
 }

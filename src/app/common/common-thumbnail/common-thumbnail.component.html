@@ -1,8 +1,10 @@
 <div #imgThumbnail class="img-thumbnail" [class.outline]="!source.image" [class.profile]="source.imgType == imgType.Profile"
-  [class.view]="source.thumbnailType == thumbnailType.View">
+  [class.view]="source.thumbnailType == thumbnailType.View" [class.overlay]="source.thumbnailType != thumbnailType.View" (mouseenter)="showOverlay()"
+  (mouseleave)="hideOverlay()">
   <img mat-card-image src="{{ source.image }}" alt="image" [class.profile]="source.imgType == imgType.Profile" *ngIf="source.image">
-  <mat-icon *ngIf="!source.image && source.imgType == imgType.NotProfile" [ngStyle]="setIconSize()">music_note</mat-icon>
-  <mat-icon *ngIf="!source.image && source.imgType == imgType.Profile" [ngStyle]="setIconSize()">person</mat-icon>
+  <mat-icon *ngIf="!source.image && source.imgType == imgType.NotProfile && !showingOverlay" [ngStyle]="setIconSize()">music_note</mat-icon>
+  <mat-icon *ngIf="!source.image && source.imgType == imgType.Profile && !showingOverlay" [ngStyle]="setIconSize()">person</mat-icon>
+  <mat-icon *ngIf="showingOverlay" [ngStyle]="setIconSize()">search</mat-icon>
 </div>
 <div class="footer-thumbnail">
   <strong>{{ source.name }}</strong>

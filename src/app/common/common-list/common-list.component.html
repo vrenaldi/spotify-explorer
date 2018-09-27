@@ -1,8 +1,13 @@
 <div class="container" *ngIf="source && source.length > 0">
   <mat-list>
-    <mat-list-item *ngFor="let list of source" (click)="goToDetail(list)">
+    <mat-list-item *ngFor="let list of source; let i = index" (click)="goToDetail(list)" (mouseenter)="showSearchIcon(i)" (mouseleave)="hideSearchIcon()">
       <img matListAvatar src="{{ list.image }}" alt="image" [class.not-profile]="list.imgType == imgType.NotProfile" *ngIf="list.image">
-      <mat-icon matListIcon *ngIf="!list.image">music_note</mat-icon>
+      <mat-icon matListIcon *ngIf="!list.image && showingSearchIcon != i && list.imgType == imgType.NotProfile">music_note</mat-icon>
+      <mat-icon matListIcon *ngIf="!list.image && showingSearchIcon != i && list.imgType == imgType.Profile">person</mat-icon>
+      <div class="spacer" *ngIf="!list.image && showingSearchIcon == i"></div>
+      <div class="icon-container" *ngIf="showingSearchIcon == i" [class.profile]="list.imgType == imgType.Profile">
+        <mat-icon matListIcon>search</mat-icon>
+      </div>
       <h3 mat-line>{{ list.name }}</h3>
       <p mat-line>
         <ng-container *ngFor="let subList of list.subLists; let i = index">

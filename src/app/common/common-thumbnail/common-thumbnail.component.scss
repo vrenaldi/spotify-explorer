@@ -14,6 +14,11 @@
     }
 }
 
+.overlay:hover {
+    background-color: rgba(0, 0, 0, 0.288);
+    & img { opacity: 0.3; }
+}
+
 .img-thumbnail::before {
 	content: "";
     padding-top: 100%;
