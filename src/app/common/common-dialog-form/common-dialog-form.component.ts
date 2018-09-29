@@ -32,7 +32,7 @@ export class CommonDialogFormComponent implements OnInit, OnDestroy {
   unsubscribe: Subject<any> = new Subject();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data,
+    @Inject(MAT_DIALOG_DATA) public data,
     private formBuilder: FormBuilder,
     private dialogRef: MatDialogRef<CommonDialogFormComponent>,
     private dataService: DataService,

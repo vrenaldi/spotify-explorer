@@ -42,8 +42,16 @@ export class SpotifyService {
   login() {
     let client_id = "a0ea5a865c3942f5ade85c5364080c38";
     let redirect_uri = `${location.protocol}//${location.hostname}${location.port ? `:${location.port}` : ``}/login`;
+    // let redirect_uri = "https://vrenaldi.github.io/spotify-explorer/login";
     let state = this.generateRandomString(16);
-    let scope = "user-read-private";
+    let scope = "playlist-modify-public " +
+      "playlist-modify-private " +
+      "user-follow-modify " +
+      "user-follow-read " +
+      "user-library-modify " +
+      "user-library-read " +
+      "user-read-email " +
+      "user-read-private";
     localStorage.setItem(this.stateKey, state);
 
     let url = "https://accounts.spotify.com/authorize";

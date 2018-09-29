@@ -30,7 +30,7 @@ export class CommonThumbnailComponent implements OnInit, AfterViewInit {
     };
   }
 
-  showOverlay(index: number) {
+  showOverlay() {
     if (this.source.thumbnailType != ThumbnailType.View)
       this.showingOverlay = true;
   }
